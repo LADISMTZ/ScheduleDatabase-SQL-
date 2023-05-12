@@ -93,4 +93,61 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Reservation overlap error';
     END IF;
 END;
+
+
+
+
+
+
+
+insert into PERIOD values('SPRING','2023-01-09','2023-05-05');
+insert into PERIOD values('AUTUMN','2023-08-07','2023-11-24');
+insert into PERIOD values('SUMMER1','2023-05-24','2023-6-20');
+insert into PERIOD values('SUMMER2','2023-06-20','2023-07-25');
+
+insert into COURSE values('MAT2052',1,'Ecuaciones Diferenciales Ordinarias','Leonardo Remedios Santiago');
+insert into COURSE values('MAT2052',2,'Ecuaciones Diferenciales Ordinarias','Jose Vazques Rodriguez');
+
+insert into COURSE values('IA206',1,'Sistemas Operativos','Miguel Angel Jara Maldonado');
+
+insert into COURSE values('LIS2082',1,'Bases de datos','Jose Luis Zechinelli Martini');
+insert into COURSE values('LIS2082',2,'Bases de datos','Jose Luis Zechinelli Martini');
+
+insert into COURSE values('LIS2022',1,'Arquitecturas Computacionlaes','Oleg Starostenko Basarab');
+insert into COURSE values('LIS2022',2,'Arquitecturas Computacionlaes','Juan Antonio Navarro Martinez');
+
+insert into COURSE values('LRT2012',1,'Circuitos Electricos','Jorge Rodriguez Asomoza');
+insert into COURSE values('LRT2012',2,'Circuitos Electricos','Roberto Rosas Romero');
+
+insert into COURSE values('LRT2032',1,'Laboratorio de Circuitos Electricos','Omar Fernando Ortiz Aguilera');
+insert into COURSE values('LRT2032',2,'Laboratorio de Circuitos Electricos','Omar Fernando Ortiz Aguilera');
+
+insert into COURSE values('LIS2012',1,'Matematicas Discretas','Luis Oswaldo Valencia Rosado');
+insert into COURSE values('LIS2012',2,'Matematicas Discretas','Luis Oswaldo Valencia Rosado');
+
+insert into COURSE values('MAT2082',1,'Probabilidad y Estadistica','Rosalia Cabrera Fuentes');
+insert into COURSE values('MAT2082',2,'Probabilidad y Estadistica','Arturo Abraham Lopez Perez');
+
+
+insert into ROOM values('HU207','40',1,'C');
+insert into ROOM values('HU106','80',1,'A');
+insert into ROOM values('CN113','18',1,'CL');
+insert into ROOM values('IA206','40',1,'C');
+insert into ROOM values('CS117','40',1,'C');
+insert into ROOM values('HU101','40',1,'C');
+insert into ROOM values('CN112','18',1,'CL');
+insert into ROOM values('CN115','18',1,'CL');
+insert into ROOM values('IA215','80',1,'A');
+insert into ROOM values('CS107','40',1,'C');
+insert into ROOM values('CS104','80',1,'A');
+insert into ROOM values('IA103','40',1,'C');
+insert into ROOM values('HU202','40',1,'C');
+insert into ROOM values('CN121','24',1,'CL');
+insert into ROOM values('CI102','24',1,'CL');
+
+insert into RESERVATION values('2023-04-25 15:50:00','Luis Mario','AUTUMN','TUESDAY','60','CN112');
+insert into RESERVATION values('2023-04-25 16:50:00','Luis Mario','AUTUMN','TUESDAY','60','CN112');
+
+insert into SCHEDULE values('CN112','AUTUMN','LIS2082',1,'Tuesday','17:00:00',60,4);
+insert into SCHEDULE values('CN112','AUTUMN','LIS2082',1,'Tuesday','18:00:00',60,4);
            

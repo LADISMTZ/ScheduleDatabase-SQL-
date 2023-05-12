@@ -1,0 +1,96 @@
+drop table RESERVATION;
+drop table SCHEDULE;
+drop table COURSE;
+drop table PERIOD;
+drop table ROOM;
+create table COURSE( COURSEKEY VARCHAR(8) NOT NULL,
+		   SECTION	INTEGER(2) NOT NULL,
+		   COURSETITLE	VARCHAR(40) NOT NULL,
+           PROFESSOR VARCHAR(40) NOT NULL,
+		   PRIMARY KEY (COURSEKEY, SECTION));
+
+
+create table PERIOD(TITLE VARCHAR(40) NOT NULL,
+		   STARTDATE DATE NOT NULL,
+		   ENDDATE DATE NOT NULL,
+		   PRIMARY KEY (TITLE));
+
+create table ROOM( ROOMID VARCHAR(6) NOT NULL,
+		   CAPACITY	INTEGER(3),
+           AVAILABILITY INTEGER(1) NOT NULL,
+		   RTYPE VARCHAR(3),
+		   PRIMARY KEY (ROOMID));
+           
+create table RESERVATION(RTIME DATETIME,
+		   RNAME VARCHAR(40),
+           RPERIOD VARCHAR(40),
+           RWEEKDAY varchar(10),
+		   DURATION INTEGER(3) NOT NULL,
+           ROOMID VARCHAR(6) NOT NULL,
+		   PRIMARY KEY (RTIME,RPERIOD,ROOMID),
+           FOREIGN KEY (RPERIOD) REFERENCES PERIOD(TITLE),
+           FOREIGN KEY (ROOMID) REFERENCES ROOM(ROOMID));
+           
+create table SCHEDULE( ROOMID VARCHAR(6) NOT NULL,
+		   TITLE VARCHAR(40) NOT NULL,
+           COURSEKEY VARCHAR(8) NOT NULL,
+		   SECTION	INTEGER(2) NOT NULL,
+           WEEKDAY VARCHAR(10) NOT NULL,
+		   STIME TIME NOT NULL,
+           SDURATION INTEGER(3) NOT NULL,
+           SEMESTER INTEGER(2) NOT NULL,
+		   FOREIGN KEY (ROOMID) REFERENCES ROOM(ROOMID),
+           foreign key (TITLE) REFERENCES PERIOD(TITLE),
+           FOREIGN KEY (COURSEKEY,SECTION) REFERENCES COURSE(COURSEKEY,SECTION));
+           
+           
+           
+           
+           
+       //this part goes inside Schedule//    
+           
+  drop trigger schedule_overlap;
+
+DELIMITER $$
+CREATE TRIGGER schedule_overlap
+BEFORE INSERT ON SCHEDULE
+FOR EACH ROW
+BEGIN
+    DECLARE overlap_count INT;
+    SET overlap_count = (
+        SELECT COUNT(*) 
+        FROM SCHEDULE 
+        WHERE ROOMID = NEW.ROOMID 
+        AND WEEKDAY = NEW.WEEKDAY 
+        AND ((NEW.STIME < ADDTIME(STIME,'01:00:00') AND STIME < ADDTIME(NEW.STIME,'01:00:00')))
+    );
+    IF overlap_count > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Schedule overlap error';
+    END IF;
+END;
+           
+           
+           
+
+//this part goes inside reservation//
+           
+           drop trigger OverlapingReservation;
+DELIMITER $$
+CREATE TRIGGER reservation_overlap
+BEFORE INSERT ON RESERVATION
+FOR EACH ROW
+BEGIN
+    DECLARE overlap_count INT;
+    SET overlap_count = (
+        SELECT COUNT(*) 
+        FROM RESERVATION 
+        WHERE ROOMID = NEW.ROOMID 
+        AND RPERIOD = NEW.RPERIOD 
+        AND RWEEKDAY = NEW.RWEEKDAY 
+        AND (NEW.RTIME < ADDTIME(RTIME, '01:00:00') AND ADDTIME(NEW.RTIME, '01:00:00') > RTIME)
+    );
+    IF overlap_count > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Reservation overlap error';
+    END IF;
+END;
+           
